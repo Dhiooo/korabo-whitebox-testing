@@ -31,11 +31,12 @@ class GroupController {
             self::logActivity($pdo, $groupId, $user['id'], "membuat grup '$name'");
 
             $pdo->commit();
-            response(['message' => 'Grup berhasil dibuat', 'code' => $code], 201);
         } catch (Exception $e) {
             $pdo->rollBack();
             response(['message' => $e->getMessage()], 500);
         }
+
+        response(['message' => 'Grup berhasil dibuat', 'code' => $code], 201);
     }
 
     public static function joinGroup($pdo) {
@@ -67,11 +68,12 @@ class GroupController {
             self::logActivity($pdo, $group['id'], $user['id'], "bergabung ke dalam grup");
 
             $pdo->commit();
-            response(['message' => 'Berhasil bergabung ke grup']);
         } catch (Exception $e) {
             $pdo->rollBack();
             response(['message' => $e->getMessage()], 500);
         }
+
+        response(['message' => 'Berhasil bergabung ke grup']);
     }
 
     public static function getMyGroups($pdo) {
@@ -149,10 +151,11 @@ class GroupController {
             self::logActivity($pdo, $groupId, $user['id'], "keluar dari grup");
 
             $pdo->commit();
-            response(['message' => 'Berhasil keluar dari grup']);
         } catch (Exception $e) {
             $pdo->rollBack();
             response(['message' => $e->getMessage()], 500);
         }
+
+        response(['message' => 'Berhasil keluar dari grup']);
     }
 }
