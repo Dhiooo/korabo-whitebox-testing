@@ -8,9 +8,16 @@ class TaskController {
         $stmt->execute([$groupId, $userId, $message]);
     }
 
+    private static function storeUploadedFile(string $tmpName, string $destination): bool {
+        if (APP_ENV === 'testing') {
+            return copy($tmpName, $destination);
+        }
+        return move_uploaded_file($tmpName, $destination);
+    }
+
     public static function createTask($pdo) {
         $user = getAuthenticatedUser();
-        $data = json_decode(file_get_contents('php://input'), true);
+        $data = getJsonInput();
         
         $groupId = $data['group_id'] ?? null;
         $title = trim($data['title'] ?? '');
@@ -52,7 +59,7 @@ class TaskController {
         $status = $_POST['status'] ?? null;
 
         if ($status === null) {
-            $data = json_decode(file_get_contents('php://input'), true);
+            $data = getJsonInput();
             $status = $data['status'] ?? null;
         }
 
@@ -91,7 +98,7 @@ class TaskController {
             $filename = time() . '_' . uniqid() . '.pdf';
             if (!is_dir(UPLOAD_DIR)) mkdir(UPLOAD_DIR, 0755, true);
             
-            if (!move_uploaded_file($_FILES['proof']['tmp_name'], UPLOAD_DIR . $filename)) {
+            if (!self::storeUploadedFile($_FILES['proof']['tmp_name'], UPLOAD_DIR . $filename)) {
                 response(['message' => 'Upload PDF gagal'], 400);
             }
             $updateSql .= ', proof_file = ?, completed_at = NOW()';
@@ -117,7 +124,7 @@ class TaskController {
 
     public static function assignTask($pdo, $taskId) {
         $user = getAuthenticatedUser();
-        $data = json_decode(file_get_contents('php://input'), true);
+        $data = getJsonInput();
         $userId = $data['userId'] ?? null;
 
         $stmt = $pdo->prepare('SELECT group_id, title FROM tasks WHERE id = ?');
