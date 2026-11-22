@@ -4,7 +4,7 @@ require_once __DIR__ . '/../jwt_helper.php';
 
 class AuthController {
     public static function register($pdo) {
-        $data = json_decode(file_get_contents('php://input'), true);
+        $data = getJsonInput();
         $name = trim($data['name'] ?? '');
         $nim = trim($data['nim'] ?? '');
         $email = strtolower(trim($data['email'] ?? ''));
@@ -38,7 +38,7 @@ class AuthController {
     }
 
     public static function login($pdo) {
-        $data = json_decode(file_get_contents('php://input'), true);
+        $data = getJsonInput();
         $nim = trim($data['nim'] ?? '');
         $password = $data['password'] ?? '';
 
@@ -74,7 +74,7 @@ class AuthController {
     }
 
     public static function requestPasswordReset($pdo) {
-        $data = json_decode(file_get_contents('php://input'), true);
+        $data = getJsonInput();
         $nim = trim($data['nim'] ?? '');
         $email = strtolower(trim($data['email'] ?? ''));
         $genericMessage = 'Jika data terdaftar, instruksi reset password sudah dibuat.';
@@ -102,7 +102,7 @@ class AuthController {
     }
 
     public static function resetPassword($pdo) {
-        $data = json_decode(file_get_contents('php://input'), true);
+        $data = getJsonInput();
         $token = $data['token'] ?? '';
         $password = $data['password'] ?? '';
 
