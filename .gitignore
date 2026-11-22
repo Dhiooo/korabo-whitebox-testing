@@ -1,0 +1,7 @@
+**/.env
+**/node_modules/
+**/uploads/*
+!php-backend/uploads/.gitkeep
+backend/uploads/
+.DS_Store
+*.log
