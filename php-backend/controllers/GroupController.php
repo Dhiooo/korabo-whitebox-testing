@@ -10,7 +10,7 @@ class GroupController {
 
     public static function createGroup($pdo) {
         $user = getAuthenticatedUser();
-        $data = json_decode(file_get_contents('php://input'), true);
+        $data = getJsonInput();
         $name = trim($data['name'] ?? '');
 
         if (strlen($name) < 3 || strlen($name) > 100) {
@@ -40,7 +40,7 @@ class GroupController {
 
     public static function joinGroup($pdo) {
         $user = getAuthenticatedUser();
-        $data = json_decode(file_get_contents('php://input'), true);
+        $data = getJsonInput();
         $code = strtoupper(trim($data['code'] ?? ''));
 
         if (!preg_match('/^[A-Z0-9]{6}$/', $code)) {
@@ -102,7 +102,7 @@ class GroupController {
 
     public static function updateGroup($pdo, $groupId) {
         $user = getAuthenticatedUser();
-        $data = json_decode(file_get_contents('php://input'), true);
+        $data = getJsonInput();
         $name = trim($data['name'] ?? '');
 
         requireGroupAdmin($pdo, $groupId, $user['id']);
